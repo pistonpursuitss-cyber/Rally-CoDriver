@@ -3,6 +3,11 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.plugin.compose")
 }
+
+val mapsApiKey = providers.gradleProperty("MAPS_API_KEY")
+    .orElse(providers.environmentVariable("MAPS_API_KEY"))
+    .getOrElse("MISSING_API_KEY")
+
 android {
     namespace = "com.rallycodriver"
     compileSdk = 35
@@ -10,10 +15,15 @@ android {
         applicationId = "com.rallycodriver"
         minSdk = 26
         targetSdk = 35
-        versionCode = 1
-        versionName = "0.1.0"
+        versionCode = 2
+        versionName = "0.2.0"
+        manifestPlaceholders["MAPS_API_KEY"] = mapsApiKey
+        buildConfigField("String", "MAPS_API_KEY", "\"${mapsApiKey.replace("\\", "\\\\").replace("\"", "\\\"")}\"")
     }
-    buildFeatures { compose = true }
+    buildFeatures {
+        compose = true
+        buildConfig = true
+    }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
@@ -29,7 +39,7 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.9.0")
     implementation("com.google.android.gms:play-services-location:21.3.0")
-    implementation("org.maplibre.gl:android-sdk:11.8.0")
+    implementation("com.google.maps.android:maps-compose:8.4.0")
     implementation("androidx.core:core-ktx:1.16.0")
     debugImplementation("androidx.compose.ui:ui-tooling")
 }
