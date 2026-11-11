@@ -29,6 +29,8 @@ jobs:
 
       - name: Build APK
         shell: bash
+        env:
+          MAPS_API_KEY: ${{ secrets.MAPS_API_KEY }}
         run: |
           if [ -f RallyCoDriver/settings.gradle.kts ]; then
             PROJECT_DIR=RallyCoDriver
